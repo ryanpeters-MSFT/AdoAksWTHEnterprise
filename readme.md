@@ -11,6 +11,44 @@ In this challenge, we'll implement an ADO pipeline based on our Kubernetes manif
 - [**app**](./app/) - Contains the "api" and "web" source code for your pipeline build step.
 - [**helm**](./helm/) - Contains a base Helm chart to use for deploying the new release. *This is optional, and you may use whatever deployment methodology desired.*
 
+## Concepts
+
+### Basic Container Image Flow
+
+In a typical CI/CD pipeline for non-container workloads, a code commit triggers an automated build and test process that validates the changes. If these tests pass, the system packages the artifact and deploys it to a staging environment for further acceptance testing. Finally, the artifact is released to production either automatically or after manual approval.
+
+In a container-based CI/CD pipeline, a code commit triggers an image build (using something like a Dockerfile), followed by automated testing. If the tests pass, the image is pushed to a registry and then deployed using an orchestration tool (such as Kubernetes), ensuring a consistent runtime environment.
+
+**In summary:**
+
+1. Code is pushed to a git repository, triggering a build.
+2. Triggered pipeline retrieves commits and then builds and pushes that image to a repository
+3. Tag, build ID, or Digest is retrieved from output of build.
+4. Deployment manifest is updated/patched with the new image tag and pushed to the container runtime.
+
+![alt text](_images\image-flow.webp)
+*([Image Source](https://tharaka-madhusanka.medium.com/how-to-deploy-net-4-x-web-app-docker-image-to-azure-web-app-container-using-azure-devops-pipeline-b5afb1193525))*
+
+### Image Tags vs Digest
+
+Referencing a container image by its digest guarantees you pull the exact same bits every time - locking in consistency, security, and caching efficiency - at the cost of added management overhead, manual updates for patches, and less human‑friendly identifiers.
+
+**Benefits**
+
+- **Immutability & Consistency** - Always fetches the identical image, never a moved or overwritten tag.
+- **Reproducibility** - Ensures builds and deployments can be replayed byte‑for‑byte.
+- **Security** - Prevents tag hijacking and confirms you’re using the image you’ve scanned or signed.
+
+**Risks**
+
+- **Manual Updates** - Doesn't auto‑pick security fixes or minor patches (e.g., "latest") - you must update digests yourself.
+- **Operational Overhead** - Managing long hashes across configs adds complexity.
+
+**Examples**
+- **Image Tag** - `docker.io/wth/api:latest`
+- **Digest** - `docker.io/wth/api@sha256:dd7808d8792c9841d0b460122f1acf0a2dd1f56404f8d1e56298048885e4`
+
+
 ## Description
 
 The challenge does require the use of the Kubernetes manifest files that were built in previous challenges for use in our ADO pipeline. The goal is to create a pipeline that, at a minimum:
@@ -18,7 +56,7 @@ The challenge does require the use of the Kubernetes manifest files that were bu
 1. Retrieves the source code from a repositiory
 2. Builds and creates an image from the source code
 3. Push that image to a registry (e.g., Azure Container Registry)
-4. Update our Kubernetes deployments to use the new image tag/SHA
+4. Update our Kubernetes deployments to use the new image tag/digest
 
 ## Building from Source
 
@@ -39,8 +77,9 @@ Using Helm would generally be recommended, as this allows for more dynamic (temp
 *Participants can decide if they would like to release both "web" and "API" as a single pipeline, or split them out into multiple pipelines.*
 
 - Source code has been pushed to a remote Git repository
-- A ADO pipeline has been created that build upon a commit to the "master" or "main" branch
+- A ADO pipeline has been created that build upon a commit to a branch
 - Any changes to the web application, for example, are reflected on the updated deployment to the cluster (e.g., a minor HTML change in the web app)
+- The images published are referenced by a digest (preferred) or unique build ID tag
 - The pipeline completes multiple builds without error
 
 ## Learning Resources
