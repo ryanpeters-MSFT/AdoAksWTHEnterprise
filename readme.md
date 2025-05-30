@@ -82,6 +82,12 @@ Using Helm would generally be recommended, as this allows for more dynamic (temp
 - The images published are referenced by a digest (preferred) or unique build ID tag
 - The pipeline completes multiple builds without error
 
+## Hints
+
+- While a docker build task can be used in your pipeline, there are easier appraoches using the Azure CLI for image creation.
+- Almost all Azure CLI commands return information about the object created, and using `-o tsv --query SOMEPROPERTY` is helpful for retrieving specific values to be stored as a variable.
+- Helm requires a properly-configured Kubeconfig file.
+
 ## Learning Resources
 
 - [Build and deploy to Azure Kubernetes Service with Azure Pipelines](https://learn.microsoft.com/en-us/azure/aks/devops-pipeline?tabs=cli)
