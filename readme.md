@@ -51,12 +51,12 @@ Referencing a container image by its digest guarantees you pull the exact same b
 
 ## Description
 
-The challenge does require the use of the Kubernetes manifest files that were built in previous challenges for use in our ADO pipeline. The goal is to create a pipeline that, at a minimum:
+The challenge does require the use of the Kubernetes manifest files that were built in previous challenges for use in our ADO pipeline. Ideally, if you can leverage Helm, it would simplify the process The goal is to create a CICD pipeline that, at a minimum:
 
-1. Retrieves the source code from a repositiory
+1. Retrieves the source code from a Git repositiory
 2. Builds and creates an image from the source code
-3. Push that image to a registry (e.g., Azure Container Registry)
-4. Update our Kubernetes deployments to use the new image tag/digest
+3. Pushes the image (or images) to a registry (e.g., Azure Container Registry)
+4. Updates your Kubernetes deployments to use the new image(s) tag/digest
 
 ## Building from Source
 
@@ -77,7 +77,7 @@ Using Helm would generally be recommended, as this allows for more dynamic (temp
 *Participants can decide if they would like to release both "web" and "API" as a single pipeline, or split them out into multiple pipelines.*
 
 - Source code has been pushed to a remote Git repository
-- A ADO pipeline has been created that build upon a commit to a branch
+- An ADO pipeline has been created that build upon a commit to a branch
 - Any changes to the web application, for example, are reflected on the updated deployment to the cluster (e.g., a minor HTML change in the web app)
 - The images published are referenced by a digest (preferred) or unique build ID tag
 - The pipeline completes multiple builds without error
