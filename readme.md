@@ -26,7 +26,7 @@ In a container-based CI/CD pipeline, a code commit triggers an image build (usin
 3. Tag, build ID, or Digest is retrieved from output of build.
 4. Deployment manifest is updated/patched with the new image tag and pushed to the container runtime.
 
-![alt text](_images\image-flow.webp)
+![alt text](./_images/image-flow.webp)
 *([Image Source](https://tharaka-madhusanka.medium.com/how-to-deploy-net-4-x-web-app-docker-image-to-azure-web-app-container-using-azure-devops-pipeline-b5afb1193525))*
 
 ### Image Tags vs Digest
